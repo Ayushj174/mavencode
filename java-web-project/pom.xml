@@ -101,12 +101,12 @@
 </build>
 	<distributionManagement>
   <repository>
-    <id>releases</id>
+    <id>deploymentmaven</id>
     <!-- CHANGE HERE by your team nexus server -->
     <url>http://172.20.10.2:8081/repository/maven-rele/</url>
   </repository>
   <snapshotRepository>
-    <id>snapshots</id>
+    <id>deploymentmaven</id>
     <!-- CHANGE HERE by your team nexus server -->
     <url>http://172.20.10.2:8081/repository/maven-snap/</url>
   </snapshotRepository>
