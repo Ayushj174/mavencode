@@ -99,17 +99,6 @@
 
         </plugins>
 </build>
-	<distributionManagement>
-  <repository>
-    <id>deploymentmaven</id>
-    <!-- CHANGE HERE by your team nexus server -->
-    <url>http://172.20.10.2:8081/repository/maven-rele/</url>
-  </repository>
-  <snapshotRepository>
-    <id>deploymentmaven</id>
-    <!-- CHANGE HERE by your team nexus server -->
-    <url>http://172.20.10.2:8081/repository/maven-snap/</url>
-  </snapshotRepository>
-</distributionManagement>
+	
 
 </project>
