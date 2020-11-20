@@ -47,4 +47,4 @@ stages:
             azureSubscription: 'Visual Studio Enterprise (7c63f23d-06c9-42d2-9202-9fc56ec986fd)'
             appType: 'webAppLinux'
             WebAppName: 'ayush-java-webappserver'
-            packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.war'
+            packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.jar'
