@@ -1,0 +1,57 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+stages:
+  - stage: Build
+    jobs:
+    - job: Build
+      pool:
+        vmImage: 'ubuntu-latest'
+        steps:
+        - task: Build maven code
+          inputs:
+            mavenPomFile: 'java-project/pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.8'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/*'
+            goals: 'package'
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(System.DefaultWorkingDirectory)'
+            Contents: '**/*.jar'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'ayush-maven'
+            publishLocation: 'Container'
+    
+  - stage: Deploy
+    jobs:
+    - job: Deploy
+      pool:
+        vmImage: 'ubuntu-latest'
+        steps:
+        - task: DownloadBuildArtifacts@0
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'ayush-maven'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: AzureRmWebAppDeployment@4
+          inputs:
+            ConnectionType: 'AzureRM'
+            azureSubscription: 'Visual Studio Enterprise (7c63f23d-06c9-42d2-9202-9fc56ec986fd)'
+            appType: 'webAppLinux'
+            WebAppName: 'ayush-java-webappserver'
+            packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.jar'
