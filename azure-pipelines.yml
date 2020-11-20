@@ -8,10 +8,9 @@ trigger:
 stages:
   - stage: Build
     jobs:
-      job: Build
+    - job: Build
     pool:
       vmImage: 'ubuntu-latest'
-
     steps:
     - task: Maven@3
       inputs:
@@ -23,10 +22,29 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'package'
-        
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'ayush-maven'
+        publishLocation: 'Container'
     
   - stage: Deploy
     jobs:
-      job: Deploy
-pool:
-  vmImage: 'ubuntu-latest'
+    - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'ayush-maven'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Visual Studio Enterprise (7c63f23d-06c9-42d2-9202-9fc56ec986fd)'
+        appType: 'webAppLinux'
+        WebAppName: 'ayush-java-webappserver'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
